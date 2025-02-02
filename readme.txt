@@ -35,6 +35,6 @@ Open new issue in the GitHub repository if you are facing a problem or have a su
 
 == Changelog ==
 
-= 1.0.0: February 1, 2025 =
+= 1.0.0: February 2, 2025 =
 
 	- Initial release.
