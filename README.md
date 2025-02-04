@@ -6,7 +6,9 @@ __Note:__ The GTranslate plugin can translate pages without any integration, but
 
 ## Key features
 
-- Ability to translate email templates.
+- Ability to translate email templates in Ultimate Member settings.
+- Send translated emails. The mail language is selected depending on the user's locale (if set) or using the GTranslate language switcher.
+- Set user locale using GTranslate language switcher. Can be disabled using the `um_gtranslate_update_user_locale` filter hook.
 
 ## Installation
 
@@ -22,7 +24,7 @@ Once the plugin is cloned, enter your site admin dashboard and go to _wp-admin >
 
 ### How to install from ZIP archive
 
-You can install the plugin from this [ZIP file](https://drive.google.com/file/d/1hheZE1n4zmO3Xhk4lXZX84Xd8PaTFrmC/view) as any other plugin. Follow [this instruction](https://wordpress.org/support/article/managing-plugins/#upload-via-wordpress-admin).
+You can install the plugin from this [ZIP file](https://drive.google.com/file/d/1uK_3C0aLfN6y2DcsOB5XYJEKkMK6x7rB/view) as any other plugin. Follow [this instruction](https://wordpress.org/support/article/managing-plugins/#upload-via-wordpress-admin).
 
 ## How to use
 
@@ -34,8 +36,9 @@ Go to *wp-admin > Ultimate Member > Settings > Email* to translate email templat
 
 The extension determines the current language as follows:
 1. from the `lang` URL parameter if it exists.
-2. from the `googtrans` cookie if it exists.
-3. from the WordPress locale.
+2. from the `X_GT_LANG` header if it exists (for the paid version).
+3. from the `googtrans` cookie if it exists (for the free version).
+4. from the WordPress locale.
 
 ## Support
 

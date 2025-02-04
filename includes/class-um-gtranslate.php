@@ -50,7 +50,7 @@ class UM_GTranslate {
 			$this->admin();
 		}
 		if ( UM()->is_request( 'frontend' ) ) {
-			$this->set_current();
+			$this->set_user_lang();
 		}
 	}
 
@@ -88,21 +88,9 @@ class UM_GTranslate {
 
 
 	/**
-	 * Set current language cookie.
-	 *
-	 * @return string
-	 */
-	public function set_current() {
-		if ( ! headers_sent() && isset( $_GET['lang'] ) ) {
-			$lang   = sanitize_key( $_GET['lang'] );
-			$cookie = '/' . $this->get_default() . '/' . $lang;
-			setrawcookie( 'googtrans', $cookie, time() + HOUR_IN_SECONDS, '/' );
-		}
-	}
-
-
-	/**
 	 * Returns the current language.
+	 *
+	 * @link https://docs.gtranslate.io/en/articles/1349939-how-to-detect-current-selected-language How to detect current selected language?
 	 *
 	 * @since 1.0.0
 	 *
@@ -116,11 +104,15 @@ class UM_GTranslate {
 				$lang = $lang_code[1];
 			}
 		}
+		if ( isset( $_SERVER['HTTP_X_GT_LANG'] ) ) {
+			$lang = sanitize_key( $_SERVER['HTTP_X_GT_LANG'] );
+		}
 		if ( isset( $_GET['lang'] ) ) {
 			$lang = sanitize_key( $_GET['lang'] );
 		}
 		if ( empty( $lang ) || 'all' === $lang ) {
-			$lang = substr( get_locale(), 0, 2 );
+			$locale = determine_locale();
+			$lang   = substr( $locale, 0, 2 );
 		}
 		return 'locale' === $field ? $this->get_translation( $lang )->language : $lang;
 	}
@@ -216,6 +208,37 @@ class UM_GTranslate {
 	 */
 	public function is_default() {
 		return $this->get_current() === $this->get_default();
+	}
+
+
+	/**
+	 * Set current language cookie and update user locale.
+	 */
+	public function set_user_lang() {
+		if ( ! headers_sent() && isset( $_GET['lang'] ) ) {
+			$lang   = sanitize_key( $_GET['lang'] );
+			$cookie = '/' . $this->get_default() . '/' . $lang;
+			setrawcookie( 'googtrans', $cookie, time() + HOUR_IN_SECONDS, '/' );
+		}
+
+		if ( is_user_logged_in() ) {
+			global $current_user;
+
+			/**
+			 * Hook: um_gtranslate_update_user_locale
+			 * Type: filter
+			 * Description: Turn on/off updating the user locale. Default on.
+			 *
+			 * @since 1.0.1
+			 *
+			 * @param bool $update Update locale or not.
+			 */
+			$update = apply_filters( 'um_gtranslate_update_user_locale', true );
+			$locale = $this->get_current( 'locale' );
+			if ( $update && $current_user->locale !== $locale ) {
+				update_user_meta( $current_user->ID, 'locale', $locale );
+			}
+		}
 	}
 
 }

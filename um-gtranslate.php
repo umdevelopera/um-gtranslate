@@ -12,7 +12,7 @@
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * UM version: 2.9.2
- * Version: 1.0.0
+ * Version: 1.0.1
  *
  * @package um_ext\um_gtranslate
  */
@@ -58,4 +58,4 @@ if ( ! function_exists( 'um_gtranslate_check_dependencies' ) ) {
 		}
 	}
 }
-add_action( 'plugins_loaded', 'um_gtranslate_check_dependencies', 2 );
+add_action( 'init', 'um_gtranslate_check_dependencies', 1 );

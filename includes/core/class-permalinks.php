@@ -16,8 +16,9 @@ class Permalinks {
 	 * Class constructor.
 	 */
 	public function __construct() {
+		
 		// Links in emails.
-		add_action( 'um_before_email_notification_sending', array( $this, 'before_email' ) );
+		add_action( 'um_before_email_notification_sending', array( $this, 'before_email' ), 20 );
 	}
 
 
